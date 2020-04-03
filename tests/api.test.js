@@ -59,7 +59,7 @@ describe('api tests', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
     
-    const blogsAfter = helper.notesInDb()
+    const blogsAfter = helper.blogsInDb()
 
     const titles = (await blogsAfter).map(blog => blog.title)
     expect(titles).toContain('test blog')
@@ -77,7 +77,7 @@ describe('api tests', () => {
       .post('/api/blogs')
       .send(newBlog)
 
-    const returnedBlog = (await helper.notesInDb())
+    const returnedBlog = (await helper.blogsInDb())
       .find(blog => blog.title === 'value-test blog')
     expect(returnedBlog.likes).toBe(0)
   })
@@ -91,6 +91,37 @@ describe('api tests', () => {
       .post('/api/blogs')
       .send(newBlog)
       .expect(400)
+  })
+
+  test('a blog can be deleted', async () => {
+    const blogs = await helper.blogsInDb()
+    const id = blogs[0].id
+
+    await api
+      .delete(`/api/blogs/${id}`)
+      .expect(204)
+
+    const blogsAfter = await helper.blogsInDb()
+    expect(blogsAfter).toHaveLength(helper.initialBlogs.length - 1)
+  })
+
+  test('a blog can be edited', async () => {
+    const blogs = await helper.blogsInDb()
+    const id = blogs[0].id
+
+    const newBlog = {
+      title: 'edited blog',
+      author: 'new author',
+      url: 'edited url'
+    }
+
+    await api
+      .put(`/api/blogs/${id}`)
+      .send(newBlog)
+      .expect(204)
+
+    const blogsAfter = await helper.blogsInDb()
+    expect(blogsAfter[0].title).toBe('edited blog')
   })
 })
 
