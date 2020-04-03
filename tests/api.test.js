@@ -127,57 +127,52 @@ describe('api tests', () => {
   })
 })
 
-describe('when there is initially one user at db', () => {
+describe('User creation validation', () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
     const passwordHash = await bcrypt.hash('sekret', 10)
     const user = new User({ username: 'root', passwordHash })
+    const newUser = new User({ username: 'usermine', passwordHash })
 
     await user.save()
+    await newUser.save()
   })
 
-  test('creation succeeds with a fresh username', async () => {
-    const usersAtStart = await helper.usersInDb()
-
-    const newUser = {
-      username: 'mluukkai',
-      name: 'Matti Luukkainen',
-      password: 'salainen',
+  test('unique username', async () => {
+    const passwordHash = await bcrypt.hash('tomato', 10)
+    const user = { 
+      username: 'usermine',
+      password: passwordHash 
     }
 
     await api
       .post('/api/users')
-      .send(newUser)
-      .expect(200)
-      .expect('Content-Type', /application\/json/)
-
-    const usersAtEnd = await helper.usersInDb()
-    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
-
-    const usernames = usersAtEnd.map(u => u.username)
-    expect(usernames).toContain(newUser.username)
+      .send(user)
+      .expect(400)
   })
 
-  test('creation fails with proper statuscode and message if username already taken', async () => {
-    const usersAtStart = await helper.usersInDb()
-
-    const newUser = {
-      username: 'root',
-      name: 'Superuser',
-      password: 'salainen',
+  test('unempty password and username fields', async () => {
+    const user = {
+      name: 'heikki'
     }
 
-    const result = await api
+    await api
       .post('/api/users')
-      .send(newUser)
+      .send(user)
       .expect(400)
-      .expect('Content-Type', /application\/json/)
+  })
 
-    expect(result.body.error).toContain('`username` to be unique')
+  test('password length must be longer than 2', async () => {
+    const user = {
+      username: 'tester',
+      password: '12'
+    }
 
-    const usersAtEnd = await helper.usersInDb()
-    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    await api
+      .post('/api/users')
+      .send(user)
+      .expect(400)
   })
 })
 
