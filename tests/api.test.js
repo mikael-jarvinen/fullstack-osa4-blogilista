@@ -35,6 +35,14 @@ describe('api tests', () => {
     const response = await api.get('/api/blogs')
     expect(response.body).toHaveLength(helper.initialBlogs.length)
   })
+
+  test('"id" field is defined', async () => {
+    const response = await api.get('/api/blogs')
+
+    const promiseArray = response.body.map(blog => expect(blog.id).toBeDefined())
+
+    await Promise.all(promiseArray)
+  })
 })
 
 afterAll(() => {
