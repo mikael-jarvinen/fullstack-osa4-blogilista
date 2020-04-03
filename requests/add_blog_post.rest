@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik9saWl2aSIsImlkIjoiNWU4N2FhNjkyNTEyNWQyZjI0NjRjYjU3IiwiaWF0IjoxNTg1OTU2NTM4fQ.V-lzNaYwSubwu4lwD9stmcpEqfiJK9iVVUCFEq0EVfk
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik9saWl2aSIsImlkIjoiNWU4N2FhNjkyNTEyNWQyZjI0NjRjYjU3IiwiaWF0IjoxNTg1OTU3MjUwfQ.HX0leClAgFvMsTbaJ-AA5sQPRJpm3HmE6lnerYaBTK4
 
 {
     "title": "Oliverin blogi",
