@@ -65,6 +65,22 @@ describe('api tests', () => {
     expect(titles).toContain('test blog')
     expect(titles).toHaveLength(helper.initialBlogs.length + 1)
   })
+
+  test('default value for field "likes" is assigned', async () => {
+    const newBlog = {
+      title: 'value-test blog',
+      author: 'test author',
+      url: 'test url'
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+
+    const returnedBlog = (await helper.notesInDb())
+      .find(blog => blog.title === 'value-test blog')
+    expect(returnedBlog.likes).toBe(0)
+  })
 })
 
 afterAll(() => {

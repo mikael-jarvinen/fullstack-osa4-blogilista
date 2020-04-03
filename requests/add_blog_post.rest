@@ -5,5 +5,5 @@ Content-Type: application/json
     "title": "Oliverin blogi",
     "author": "Oliver",
     "url": "tyämies.org",
-    "likes": 5000
+    "likes": 0
 }
