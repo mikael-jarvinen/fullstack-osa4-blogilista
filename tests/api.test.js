@@ -81,6 +81,17 @@ describe('api tests', () => {
       .find(blog => blog.title === 'value-test blog')
     expect(returnedBlog.likes).toBe(0)
   })
+
+  test('malformatted blog can not be succesfully added', async () => {
+    const newBlog = {
+      likes: 12
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  })
 })
 
 afterAll(() => {
